@@ -1,0 +1,99 @@
+#questionnaire-app .accordion-button:not(.collapsed) {
+    background-color: #eef4ff;
+    color: #0d3b8c;
+}
+
+#questionnaire-app fieldset {
+    border: none;
+    padding: 0;
+}
+
+#questionnaire-app legend {
+    float: none;
+    width: auto;
+}
+
+.conditional-block {
+    transition: opacity 0.15s ease-in-out;
+}
+
+.char-counter {
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+.field-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+}
+
+#resultModalMessage {
+    max-height: 20rem;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.brush-owner-group .btn-group-sm .btn {
+    min-width: 52px;
+}
+
+#autosave-indicator {
+    min-height: 1.1rem;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 59, 140, 0.25);
+}
+
+.document-production-table {
+    min-width: 900px;
+    margin-bottom: 0;
+}
+
+.document-production-table th,
+.document-production-table td {
+    padding: 0.9rem;
+    vertical-align: top;
+}
+
+.document-production-table thead th {
+    background-color: #eef4ff;
+    color: #0d3b8c;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.document-production-table thead th:nth-child(2) {
+    text-align: left;
+}
+
+.document-number-column {
+    width: 4rem;
+}
+
+.document-response-column {
+    width: 10.5rem;
+}
+
+.document-other-column {
+    width: 18rem;
+}
+
+.document-response-group .form-check-input {
+    cursor: pointer;
+}
+
+.document-other-input {
+    min-width: 14rem;
+}
+
+.document-production-table .field-error {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .document-production-table-wrap {
+        margin-right: -1rem;
+        margin-left: -1rem;
+    }
+}

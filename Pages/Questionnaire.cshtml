@@ -1,0 +1,554 @@
+@page
+@model QuestDetails.Pages.QuestionnaireModel
+@{
+    ViewData["Title"] = "Palisades Fire Plaintiff Questionnaire";
+}
+
+<link rel="stylesheet" href="~/css/questionnaire.css" />
+
+<div class="container-fluid py-4 px-3 px-md-4 px-lg-5" id="questionnaire-app">
+
+    <header class="mb-4">
+        <h1 class="h3 mb-1">Palisades Fire Plaintiff Questionnaire</h1>
+        <p class="text-muted mb-0">
+            Complete all required fields, then submit the questionnaire when you are ready.
+        </p>
+    </header>
+
+    <div id="form-alert" class="alert d-none" role="alert"></div>
+
+    <form id="questionnaire-form" novalidate>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Form.SessionId" id="SessionId" />
+        <input type="hidden" asp-for="Form.LqId" id="LQID" />
+
+        <div class="accordion" id="sectionAccordion">
+
+            <!-- ============================================================ -->
+            <!-- SECTION 1: Ignition and Spread                                -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secIgnition">
+                        1. Ignition and Spread of the Palisades Fire
+                    </button>
+                </h2>
+                <div id="secIgnition" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+
+                        <fieldset class="mb-4">
+                            <legend class="h6">
+                                Did you or anyone you know personally observe any flames, smoke, or smoldering
+                                between January 1, 2025 and January 7, 2025 at around 10:30 A.M. near the area
+                                depicted, west of Temescal Ridge Trail, south of Skull Rock Trailhead, and north
+                                of Skull Rock? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#ignition-followup-1" role="group">
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedFlamesSmokeSmoldering" id="ign1-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign1-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedFlamesSmokeSmoldering" id="ign1-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign1-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.IgnitionAndSpread.ObservedFlamesSmokeSmoldering"></div>
+
+                            <div id="ignition-followup-1" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="ObserverNameOrMe">
+                                        Name, address, phone number, and email of the person who observed it; if it was you, just say "me"
+                                    </label>
+                                    <input class="form-control" maxlength="500" id="ObserverNameOrMe"
+                                           name="Form.IgnitionAndSpread.ObserverNameOrMe" placeholder="e.g., Me" />
+                                    <div class="form-text char-counter" data-max="500"></div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="ObservationDescription">
+                                        Describe what you saw or what was reported to you, including location, date, and time
+                                    </label>
+                                    <textarea class="form-control" rows="4" maxlength="5000" id="ObservationDescription"
+                                              name="Form.IgnitionAndSpread.ObservationDescription"></textarea>
+                                    <div class="form-text char-counter" data-max="5000"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mb-4">
+                            <legend class="h6">
+                                Did you personally observe any homes or structures ignite between January 7, 2025
+                                at 10:30 A.M. and January 31, 2025 at 10:48 A.M.? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#ignition-followup-2" role="group">
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedHomesIgnite" id="ign2-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign2-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedHomesIgnite" id="ign2-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign2-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.IgnitionAndSpread.ObservedHomesIgnite"></div>
+
+                            <div id="ignition-followup-2" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <label class="form-label" for="HomesIgniteDescription">
+                                    Describe what you saw, including date, time, location, and cause
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="HomesIgniteDescription"
+                                          name="Form.IgnitionAndSpread.HomesIgniteDescription"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mb-2">
+                            <legend class="h6">
+                                Did you personally observe fire, flames, explosions, or burning embers from the
+                                Palisades Fire between January 7, 2025 at 10:30 A.M. and January 11, 2025 at 8:00 P.M.?
+                                <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#ignition-followup-3" role="group">
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedFireFlamesExplosionsEmbers" id="ign3-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign3-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.IgnitionAndSpread.ObservedFireFlamesExplosionsEmbers" id="ign3-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="ign3-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.IgnitionAndSpread.ObservedFireFlamesExplosionsEmbers"></div>
+
+                            <div id="ignition-followup-3" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <label class="form-label" for="FireFlamesExplosionsEmbersDescription">
+                                    Describe what you observed, including dates/times, other persons present, and locations
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="FireFlamesExplosionsEmbersDescription"
+                                          name="Form.IgnitionAndSpread.FireFlamesExplosionsEmbersDescription"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 2: Outages                                            -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secOutages">
+                        2. Outages
+                    </button>
+                </h2>
+                <div id="secOutages" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+                        <fieldset>
+                            <legend class="h6">
+                                Did you lose power or experience any outage of electricity, communications, or gas
+                                service at or during the time of the fire? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#outage-followup" role="group">
+                                <input type="radio" class="btn-check" name="Form.Outages.LostServiceDuringFire" id="out-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="out-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.Outages.LostServiceDuringFire" id="out-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="out-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.Outages.LostServiceDuringFire"></div>
+
+                            <div id="outage-followup" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <label class="form-label" for="OutageDetails">
+                                    Which service(s) experienced an outage, when it began, and when it ended
+                                </label>
+                                <input class="form-control" maxlength="500" id="OutageDetails" name="Form.Outages.OutageDetails" />
+                                <div class="form-text char-counter" data-max="500"></div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 3: Equipment and Poles                                -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secEquipment">
+                        3. Equipment and Poles
+                    </button>
+                </h2>
+                <div id="secEquipment" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+
+                        <fieldset class="mb-4">
+                            <legend class="h6">
+                                Prior to the fire, were you aware of any issues with utility poles, lines, or other
+                                equipment near your claimed damages? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#equip-followup-1" role="group">
+                                <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.AwareOfPoleIssuesBeforeFire" id="eq1-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="eq1-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.AwareOfPoleIssuesBeforeFire" id="eq1-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="eq1-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.EquipmentAndPoles.AwareOfPoleIssuesBeforeFire"></div>
+
+                            <div id="equip-followup-1" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <label class="form-label" for="PoleIssuesDescription">
+                                    Describe the issues, location, and any steps taken to report them
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="PoleIssuesDescription"
+                                          name="Form.EquipmentAndPoles.PoleIssuesDescription"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mb-4">
+                            <legend class="h6">
+                                Did you personally witness any broken pole, downed line, or sparking equipment
+                                during the Palisades Fire? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#equip-followup-2" role="group">
+                                <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.WitnessedBrokenPoleDownedLineSparking" id="eq2-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="eq2-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.WitnessedBrokenPoleDownedLineSparking" id="eq2-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="eq2-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.EquipmentAndPoles.WitnessedBrokenPoleDownedLineSparking"></div>
+
+                            <div id="equip-followup-2" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="BrokenPoleDescription">
+                                        Describe what you witnessed, including location, date, time, and whether the fire had reached the area
+                                    </label>
+                                    <textarea class="form-control" rows="4" maxlength="5000" id="BrokenPoleDescription"
+                                              name="Form.EquipmentAndPoles.BrokenPoleDescription"></textarea>
+                                    <div class="form-text char-counter" data-max="5000"></div>
+                                </div>
+
+                                <label class="form-label d-block">Did you witness the moment the pole broke or lines came down?</label>
+                                <div class="btn-group yes-no-toggle" data-target="#equip-followup-3" role="group">
+                                    <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.WitnessedMomentPoleBroke" id="eq3-yes" value="Yes" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="eq3-yes">Yes</label>
+                                    <input type="radio" class="btn-check" name="Form.EquipmentAndPoles.WitnessedMomentPoleBroke" id="eq3-no" value="No" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="eq3-no">No</label>
+                                </div>
+
+                                <div id="equip-followup-3" class="conditional-block mt-3">
+                                    <label class="form-label" for="MomentPoleBrokeDescription">
+                                        Describe how and where the pole or line appeared to break
+                                    </label>
+                                    <textarea class="form-control" rows="4" maxlength="5000" id="MomentPoleBrokeDescription"
+                                              name="Form.EquipmentAndPoles.MomentPoleBrokeDescription"></textarea>
+                                    <div class="form-text char-counter" data-max="5000"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 4: Water Use and Sources                              -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secWater">
+                        4. Water Use and Sources
+                    </button>
+                </h2>
+                <div id="secWater" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+
+                        <div class="mb-4">
+                            <label class="form-label" for="WaterProvider">Who was the water provider for your Loss Location? <span class="text-danger">*</span></label>
+                            <select class="form-select" id="WaterProvider" name="Form.WaterUse.WaterProvider" style="max-width: 320px;">
+                                <option value="" selected>-- Select --</option>
+                                <option value="LADWP">LADWP</option>
+                                <option value="District29">District 29</option>
+                                <option value="LasVirgenes">Las Virgenes</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.WaterUse.WaterProvider"></div>
+                            <input class="form-control mt-2 d-none" id="WaterProviderOtherText" maxlength="500"
+                                   name="Form.WaterUse.WaterProviderOtherText" placeholder="Please specify" style="max-width:320px;" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" for="WaterInfrastructureDescription">
+                                List and describe all water infrastructure on the Loss Location on January 7, 2025
+                                (faucets, hoses, sprinklers, pools, pumps, etc.)
+                            </label>
+                            <input class="form-control" maxlength="500" id="WaterInfrastructureDescription"
+                                   name="Form.WaterUse.WaterInfrastructureDescription" />
+                            <div class="form-text char-counter" data-max="500"></div>
+                        </div>
+
+                        <fieldset class="mb-4">
+                            <legend class="h6">
+                                Between January 7 and January 8, 2025, did you turn on the water at the Loss Location
+                                to attempt to fight or prevent any fire? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#water-followup" role="group">
+                                <input type="radio" class="btn-check" name="Form.WaterUse.TurnedOnWaterToFightFire" id="w1-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="w1-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.WaterUse.TurnedOnWaterToFightFire" id="w1-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="w1-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.WaterUse.TurnedOnWaterToFightFire"></div>
+
+                            <div id="water-followup" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Did you ever lose water pressure, or did it ever decrease?</label>
+                                    <select class="form-select" name="Form.WaterUse.LostWaterPressure" style="max-width:220px;">
+                                        <option value="">-- Select --</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="DontKnow">Don't Know</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label d-block">Was the water running when you left your Loss Location (if you left Jan 7-11, 2025)?</label>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="Form.WaterUse.WaterRunningWhenLeft" id="w2-yes" value="Yes" autocomplete="off">
+                                        <label class="btn btn-outline-secondary" for="w2-yes">Yes</label>
+                                        <input type="radio" class="btn-check" name="Form.WaterUse.WaterRunningWhenLeft" id="w2-no" value="No" autocomplete="off">
+                                        <label class="btn btn-outline-secondary" for="w2-no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="h6">
+                                Did you observe any fire hydrants, fire hoses, or other water outlets run out of
+                                water or appear to have low pressure on January 7 or 8, 2025? <span class="text-danger">*</span>
+                            </legend>
+                            <div class="btn-group yes-no-toggle" data-target="#water-followup-2" role="group">
+                                <input type="radio" class="btn-check" name="Form.WaterUse.ObservedHydrantsLowPressure" id="w3-yes" value="Yes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="w3-yes">Yes</label>
+                                <input type="radio" class="btn-check" name="Form.WaterUse.ObservedHydrantsLowPressure" id="w3-no" value="No" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="w3-no">No</label>
+                            </div>
+                            <div class="invalid-feedback d-block field-error" data-for="Form.WaterUse.ObservedHydrantsLowPressure"></div>
+
+                            <div id="water-followup-2" class="conditional-block mt-3 ps-3 border-start border-3">
+                                <label class="form-label" for="HydrantsLowPressureDescription">
+                                    State where you saw hydrants run out of water, when, and describe what you saw
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="HydrantsLowPressureDescription"
+                                          name="Form.WaterUse.HydrantsLowPressureDescription"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 5: Brush Clearance                                    -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secBrush">
+                        5. Brush Clearance
+                    </button>
+                </h2>
+                <div id="secBrush" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+                        <p class="mb-3">
+                            Do you have any personal knowledge of overgrown brush on lots owned by one or more of
+                            the following which you believe contributed to your claimed damages?
+                        </p>
+
+                        @{
+                            var brushOwners = new (string Field, string Label)[]
+                            {
+                                ("OvergrownBrushCityOfLA", "The City of Los Angeles"),
+                                ("OvergrownBrushStateOfCA", "The State of California"),
+                                ("OvergrownBrushMRCA", "Mountains Recreation and Conservation Authority"),
+                                ("OvergrownBrushGetty", "J. Paul Getty Trust"),
+                                ("OvergrownBrushPalisadesBowl", "Pacific Palisades Bowl Owners and Managers"),
+                                ("OvergrownBrushOtherOwners", "Other Property Owners"),
+                            };
+                        }
+
+                        <div class="row g-3 mb-4 brush-owner-group">
+                            @foreach (var owner in brushOwners)
+                            {
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center border rounded p-2">
+                                        <span>@owner.Label</span>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <input type="radio" class="btn-check brush-yesno" name="Form.BrushClearance.@owner.Field" id="@(owner.Field)-yes" value="Yes" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="@(owner.Field)-yes">Yes</label>
+                                            <input type="radio" class="btn-check brush-yesno" name="Form.BrushClearance.@owner.Field" id="@(owner.Field)-no" value="No" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="@(owner.Field)-no">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div id="brush-followup" class="conditional-block">
+                            <div class="mb-3">
+                                <label class="form-label" for="BrushLocationsAndEvidence">
+                                    Identify the exact locations (address, GPS coordinates, or intersection) and owners of the
+                                    lots with overgrown brush, and describe your evidence
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="BrushLocationsAndEvidence"
+                                          name="Form.BrushClearance.BrushLocationsAndEvidence"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                            <div>
+                                <label class="form-label" for="BrushReportedDetails">
+                                    Did you report the overgrown brush to anybody? If so, state date/time, to whom, what you
+                                    said, and whether it was addressed. If not, say "Did not report."
+                                </label>
+                                <textarea class="form-control" rows="4" maxlength="5000" id="BrushReportedDetails"
+                                          name="Form.BrushClearance.BrushReportedDetails"></textarea>
+                                <div class="form-text char-counter" data-max="5000"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 6: Other Information re Defendants                    -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secOther">
+                        6. Other Information re Defendants
+                    </button>
+                </h2>
+                <div id="secOther" class="accordion-collapse collapse" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+                        <label class="form-label" for="AdditionalLiabilityInformation">
+                            Do you personally have any information about the liability of any defendant beyond what
+                            is stated in the Master Complaint or your Notice of Adoption? If so, describe it here.
+                        </label>
+                        <textarea class="form-control" rows="5" maxlength="5000" id="AdditionalLiabilityInformation"
+                                  name="Form.OtherDefendantInfo.AdditionalLiabilityInformation"></textarea>
+                        <div class="form-text char-counter" data-max="5000"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 7: Document Production                               -->
+            <!-- ============================================================ -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secDocuments" aria-controls="secDocuments">
+                        7. Documents Available for Production
+                    </button>
+                </h2>
+                <div id="secDocuments" class="accordion-collapse collapse show" data-bs-parent="#sectionAccordion">
+                    <div class="accordion-body">
+                        <p class="text-muted mb-3">For each request, choose the response that best describes the documents available to you.</p>
+
+                        @{
+                            var documentRequests = new (int Number, string Description)[]
+                            {
+                                (1, "All photos or videos taken within the Palisades Fire Footprint from January 1, 2025, through January 31, 2025 (include all photos or videos taken by you or a third party and all photos or videos retrievable from a doorbell, security, or other camera on your property or your vehicle), and any photographs or videos depicting the fire or any indicia of the fire (such as smoke columns, ash, or burning), and any drone footage, audio recordings, or dashcam footage of the fire."),
+                                (2, "All communications relating to the Palisades or Lachman Fires from January 1, 2025, through January 31, 2025, and any communications describing the fire or any indicia of the fire, such as smoke columns, ash, or burning."),
+                                (3, "All documents or communications from January 1, 2025, through January 31, 2025, containing information about observations of any spot fires in the Palisades Fire Footprint in or around January 2025, including any photos or videos depicting the spot fires, their location, and any nearby poles or equipment."),
+                                (4, "All photos, videos, digital and/or thermal renderings that show Temescal Canyon Trail near Skull Rock between January 1, 2025, and January 7, 2025."),
+                                (5, "All photos or videos showing damaged or broken utility poles, lines, transformers, cables, or other utility equipment or infrastructure in the Palisades Fire Footprint taken between January 1, 2025, and January 31, 2025."),
+                                (6, "All documents and communications relating to the condition of utility poles, lines, transformers, cables, or other utility equipment or infrastructure in the Palisades Fire Footprint between January 7 and January 31, 2025."),
+                                (7, "Pre-fire photos sufficient to show all sides of the exterior of your Loss Location, including vegetation and landscaping, taken as close in time as possible to January 7, 2025."),
+                                (8, "All documents and communications relating to the condition of brush or vegetation at any property within the Palisades Fire Footprint owned by City of Los Angeles, the State of California, Mountains Recreation and Conservation Authority, J. Paul Getty Trust, or Pacific Palisades Bowl from December 1, 2024 to the present."),
+                                (9, "Your Insurance Claim File, including all communications with your property or casualty insurer regarding the fire, including any documents provided to your insurer."),
+                                (10, "All documents supporting your responses to the questions in Sections B or C above.")
+                            };
+                        }
+
+                        <div class="table-responsive document-production-table-wrap">
+                            <table class="table table-bordered align-middle document-production-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="document-number-column">#</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" class="document-response-column">Have Documents /<br />Will Produce</th>
+                                        <th scope="col" class="document-response-column">Do Not Have<br />Documents</th>
+                                        <th scope="col" class="document-other-column">Other</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var request in documentRequests)
+                                    {
+                                        var responseName = $"Form.DocumentProduction.Item{request.Number}Response";
+                                        var otherName = $"Form.DocumentProduction.Item{request.Number}OtherText";
+                                        var otherId = $"DocumentItem{request.Number}OtherText";
+                                        var fieldErrorName = responseName;
+                                        <tr>
+                                            <th scope="row">@request.Number</th>
+                                            <td>@request.Description</td>
+                                            <td class="text-center">
+                                                <div class="document-response-group" role="radiogroup" aria-label="Document request @request.Number response">
+                                                    <input class="form-check-input" type="radio" name="@responseName" id="document-@request.Number-have" value="HaveDocumentsWillProduce" autocomplete="off" />
+                                                    <label class="visually-hidden" for="document-@request.Number-have">Have documents / will produce</label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="document-response-group" role="radiogroup" aria-label="Document request @request.Number response">
+                                                    <input class="form-check-input" type="radio" name="@responseName" id="document-@request.Number-none" value="DoNotHaveDocuments" autocomplete="off" />
+                                                    <label class="visually-hidden" for="document-@request.Number-none">Do not have documents</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="document-response-group d-flex align-items-start gap-2" role="radiogroup" aria-label="Document request @request.Number response">
+                                                    <input class="form-check-input mt-1" type="radio" name="@responseName" id="document-@request.Number-other" value="Other" autocomplete="off" aria-controls="@otherId" />
+                                                    <label class="visually-hidden" for="document-@request.Number-other">Other</label>
+                                                    <div class="document-other-input d-none flex-grow-1">
+                                                        <label class="form-label small mb-1" for="@otherId">Please explain</label>
+                                                        <textarea class="form-control form-control-sm" rows="3" maxlength="5000" id="@otherId" name="@otherName" placeholder="Please describe (up to 5,000 characters)"></textarea>
+                                                        <div class="form-text char-counter" data-max="5000"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="invalid-feedback d-block field-error" data-for="@fieldErrorName"></div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center gap-2 mt-4 pt-3 border-top">
+            <button type="submit" id="btn-submit" class="btn btn-outline-primary px-4">
+                <span class="spinner-border spinner-border-sm d-none" id="submit-spinner"></span>
+                Save
+            </button>
+            <button type="submit" id="btn-save-next" class="btn btn-primary px-4">
+                Save &amp; Next
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- ================================================================ -->
+<!-- Result modal: shared for both success and error                   -->
+<!-- ================================================================ -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true" aria-labelledby="resultModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">
+                    <span id="resultModalIcon" class="me-2"></span>
+                    <span id="resultModalTitle">Result</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultModalMessage" class="mb-2"></p>
+                <p class="text-muted small mb-0" id="resultModalReference"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/questionnaire.js" asp-append-version="true"></script>
+}
