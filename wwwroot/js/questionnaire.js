@@ -11,6 +11,34 @@
     const resultModal = resultModalEl ? new bootstrap.Modal(resultModalEl) : null;
 
     // ---------------------------------------------------------------
+    // Restore the last explicitly saved server-side snapshot before the
+    // conditional UI and progress indicators are initialized.
+    // ---------------------------------------------------------------
+    function hydrateSavedForm() {
+        const dataElement = document.getElementById("initial-form-data");
+        if (!dataElement?.textContent.trim()) return;
+
+        try {
+            const data = JSON.parse(dataElement.textContent);
+            document.querySelectorAll("#questionnaire-form input[name], #questionnaire-form textarea[name], #questionnaire-form select[name]")
+                .forEach((control) => {
+                    const path = control.name.replace(/^Form\./, "").split(".");
+                    const value = path.reduce((node, key) => node?.[key], data);
+                    if (value === null || value === undefined) return;
+
+                    if (control.type === "radio" || control.type === "checkbox") {
+                        control.checked = String(value) === control.value;
+                    } else {
+                        control.value = String(value);
+                    }
+                });
+        } catch {
+            // A missing or malformed saved snapshot must never prevent a
+            // respondent from completing a new questionnaire.
+        }
+    }
+
+    // ---------------------------------------------------------------
     // Conditional (Yes/No -> reveal follow-up) fields
     // ---------------------------------------------------------------
     function initConditionalToggles() {
@@ -38,32 +66,35 @@
                 });
             });
 
-            // Start hidden until an answer is made.
-            target.classList.add("d-none");
+            const selected = group.querySelector("input[type=radio]:checked");
+            target.classList.toggle("d-none", selected?.value !== "Yes");
         });
 
         // Brush clearance: show the shared follow-up block if ANY owner is "Yes".
         const brushFollowup = document.getElementById("brush-followup");
         if (brushFollowup) {
-            brushFollowup.classList.add("d-none");
+            const updateBrushFollowup = () => {
+                const anyYes = Array.from(document.querySelectorAll(".brush-yesno"))
+                    .some((r) => r.checked && r.value === "Yes");
+                brushFollowup.classList.toggle("d-none", !anyYes);
+            };
             document.querySelectorAll(".brush-yesno").forEach((radio) => {
-                radio.addEventListener("change", () => {
-                    const anyYes = Array.from(document.querySelectorAll(".brush-yesno"))
-                        .some((r) => r.checked && r.value === "Yes");
-                    brushFollowup.classList.toggle("d-none", !anyYes);
-                });
+                radio.addEventListener("change", updateBrushFollowup);
             });
+            updateBrushFollowup();
         }
 
         // Water provider "Other" text box.
         const providerSelect = document.getElementById("WaterProvider");
         const providerOther = document.getElementById("WaterProviderOtherText");
         if (providerSelect && providerOther) {
-            providerSelect.addEventListener("change", () => {
+            const updateProviderOther = () => {
                 const isOther = providerSelect.value === "Other";
                 providerOther.classList.toggle("d-none", !isOther);
                 if (!isOther) providerOther.value = "";
-            });
+            };
+            providerSelect.addEventListener("change", updateProviderOther);
+            updateProviderOther();
         }
     }
 
@@ -305,7 +336,7 @@
             return;
         }
 
-        setSubmitting(true);
+        setSubmitting(true, event.submitter);
         try {
             const payload = { Form: serializeForm() };
             const response = await fetch(`?handler=Submit&validateForNext=${validateForNext}`, {
@@ -361,11 +392,15 @@
         });
     }
 
-    function setSubmitting(isSubmitting) {
-        const spinner = document.getElementById("submit-spinner");
+    function setSubmitting(isSubmitting, activeButton = null) {
         document.querySelectorAll('#questionnaire-form button[type="submit"]')
-            .forEach((button) => (button.disabled = isSubmitting));
-        spinner.classList.toggle("d-none", !isSubmitting);
+            .forEach((button) => {
+                button.disabled = isSubmitting;
+                button.setAttribute("aria-busy", String(isSubmitting));
+                const isActive = isSubmitting && button === activeButton;
+                button.querySelector(".action-spinner")?.classList.toggle("d-none", !isActive);
+                button.querySelector(".button-label")?.classList.toggle("d-none", isActive);
+            });
     }
 
     function showResultModal(success, message, referenceNumber) {
@@ -399,6 +434,7 @@
     // Wire up
     // ---------------------------------------------------------------
     document.addEventListener("DOMContentLoaded", () => {
+        hydrateSavedForm();
         initConditionalToggles();
         initDocumentProductionToggles();
         initAccordionAnswerIndicators();

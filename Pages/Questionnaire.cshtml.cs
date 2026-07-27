@@ -122,6 +122,10 @@ namespace QuestDetails.Pages
                     session.SetString(LqIdSessionKey, result.LqId.Value.ToString());
                     submittedForm.LqId = result.LqId.Value;
                 }
+                // Explicit saves are the only time we persist answers. This
+                // allows the form, progress header, and accordion states to
+                // be restored after navigation without reintroducing autosave.
+                _draftStore.Save(session, submittedForm);
                 _logger.LogInformation(
                     "Questionnaire {SessionId} saved successfully. LQ ID: {LqId}",
                     submittedForm.SessionId, result.LqId);
