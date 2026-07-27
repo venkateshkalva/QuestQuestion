@@ -181,7 +181,8 @@
 }
 
 .ignition-question-image {
-    max-width: 48rem;
+    width: 398px;
+    max-width: 100%;
     overflow: hidden;
     border: 1px solid #d9e1ea;
     border-radius: 0.5rem;
@@ -191,8 +192,7 @@
 .ignition-question-image img {
     display: block;
     width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+    height: auto;
 }
 
 .ignition-question-image figcaption {
@@ -235,7 +235,9 @@
 
 .document-production-table {
     min-width: 900px;
+    width: 100%;
     margin-bottom: 0;
+    table-layout: fixed;
 }
 
 .document-production-table th,
@@ -256,15 +258,23 @@
 }
 
 .document-number-column {
-    width: 4rem;
+    width: 5%;
+}
+
+.document-description-column {
+    width: 43%;
 }
 
 .document-response-column {
-    width: 10.5rem;
+    width: 15%;
 }
 
 .document-other-column {
-    width: 18rem;
+    width: 22%;
+}
+
+.document-production-table td:nth-child(2) {
+    overflow-wrap: anywhere;
 }
 
 .document-response-group .form-check-input {
@@ -272,7 +282,19 @@
 }
 
 .document-other-input {
-    min-width: 14rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+.document-other-input .form-control {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.document-production-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .document-production-table .field-error {
