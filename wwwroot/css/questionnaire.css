@@ -180,6 +180,27 @@
     width: auto;
 }
 
+.ignition-question-image {
+    max-width: 48rem;
+    overflow: hidden;
+    border: 1px solid #d9e1ea;
+    border-radius: 0.5rem;
+    background: #f8fafc;
+}
+
+.ignition-question-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.ignition-question-image figcaption {
+    padding: 0.5rem 0.75rem;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
 .conditional-block {
     transition: opacity 0.15s ease-in-out;
 }
