@@ -8,6 +8,40 @@
 
 <div class="container-fluid py-4 px-3 px-md-4 px-lg-5" id="questionnaire-app">
 
+    <section class="questionnaire-summary-header mb-4" aria-labelledby="plaintiff-banner-title">
+        <div class="summary-plaintiff">
+            <div class="summary-plaintiff-icon" aria-hidden="true">P</div>
+            <div>
+                <span class="summary-kicker">Case participant</span>
+                <h2 id="plaintiff-banner-title">@(Model.Plaintiff.Name ?? "Plaintiff details")</h2>
+                <dl class="summary-details mb-0">
+                    <div>
+                        <dt>Plaintiff ID</dt>
+                        <dd>@(Model.Plaintiff.PlaintiffId ?? "Not available")</dd>
+                    </div>
+                    <div>
+                        <dt>Type</dt>
+                        <dd>@(Model.Plaintiff.PlaintiffType ?? "Not available")</dd>
+                    </div>
+                    <div>
+                        <dt>DOB</dt>
+                        <dd>@(Model.Plaintiff.DateOfBirth?.ToString("MM/dd/yyyy") ?? "Not available")</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+        <div class="summary-progress" aria-live="polite">
+            <div class="summary-progress-heading">
+                <span>Questionnaire progress</span>
+                <strong id="progress-count">0 of 7 sections started</strong>
+            </div>
+            <div class="progress summary-progress-track" role="progressbar" aria-label="Questionnaire completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="summary-save-status" id="save-status" data-state="idle">Not saved</div>
+        </div>
+    </section>
+
     <header class="mb-4">
         <h1 class="h3 mb-1">Palisades Fire Plaintiff Questionnaire</h1>
         <p class="text-muted mb-0">

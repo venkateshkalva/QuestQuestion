@@ -117,6 +117,7 @@
                     ? "linear-gradient(to right, rgba(220, 53, 69, 0.14), transparent 35%)"
                     : "";
         }
+        updateProgressHeader();
     }
 
     function initAccordionAnswerIndicators() {
@@ -130,6 +131,26 @@
     function setSaveErrorState(hasError) {
         document.getElementById("sectionAccordion")?.classList.toggle("accordion--save-error", hasError);
         document.querySelectorAll("#sectionAccordion .accordion-item").forEach(updateAccordionAnswerState);
+    }
+
+    function updateProgressHeader() {
+        const sections = Array.from(document.querySelectorAll("#sectionAccordion .accordion-item"));
+        const started = sections.filter((section) => section.classList.contains("accordion-item--answered")).length;
+        const percentage = sections.length ? Math.round((started / sections.length) * 100) : 0;
+        const count = document.getElementById("progress-count");
+        const track = document.querySelector(".summary-progress-track");
+        const bar = document.getElementById("progress-bar");
+
+        if (count) count.textContent = `${started} of ${sections.length} sections started`;
+        if (track) track.setAttribute("aria-valuenow", String(percentage));
+        if (bar) bar.style.width = `${percentage}%`;
+    }
+
+    function setSaveStatus(message, state) {
+        const status = document.getElementById("save-status");
+        if (!status) return;
+        status.textContent = message;
+        status.dataset.state = state;
     }
 
     // ---------------------------------------------------------------
@@ -251,6 +272,14 @@
         return tokenInput ? tokenInput.value : "";
     }
 
+    function hasAtLeastOneAnswer() {
+        return Array.from(new FormData(form).entries()).some(([key, value]) =>
+            key.startsWith("Form.") &&
+            key !== "Form.SessionId" &&
+            key !== "Form.LqId" &&
+            String(value).trim() !== "");
+    }
+
     // ---------------------------------------------------------------
     // Save and Save & Next -> POST to the same idempotent server handler.
     // The server returns the LQ ID after the first save; keeping it in the
@@ -260,17 +289,26 @@
         event.preventDefault();
         hideAlert();
         setSaveErrorState(false);
+        setSaveStatus("Saving…", "saving");
+        const validateForNext = event.submitter?.id === "btn-save-next";
 
-        if (!validateForm()) {
+        if (validateForNext && !validateForm()) {
             setSaveErrorState(true);
+            setSaveStatus("Please review the highlighted sections", "error");
             showAlert("danger", "Please correct the highlighted fields before submitting.");
+            return;
+        }
+
+        if (!validateForNext && !hasAtLeastOneAnswer()) {
+            setSaveStatus("Answer at least one question before saving", "error");
+            showAlert("danger", "Please answer at least one question before saving.");
             return;
         }
 
         setSubmitting(true);
         try {
             const payload = { Form: serializeForm() };
-            const response = await fetch("?handler=Submit", {
+            const response = await fetch(`?handler=Submit&validateForNext=${validateForNext}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -284,14 +322,20 @@
             if (response.ok && result?.success) {
                 const lqIdInput = document.getElementById("LQID");
                 if (lqIdInput && result.lqId) lqIdInput.value = result.lqId;
+                const now = new Date();
+                setSaveStatus(
+                    `Saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
+                    "saved");
                 showResultModal(true, result.message, result.referenceNumber);
             } else {
                 setSaveErrorState(true);
+                setSaveStatus("Save failed — please try again", "error");
                 applyServerErrors(result?.errors);
                 showResultModal(false, result?.message || "The submission could not be completed. Please try again.");
             }
         } catch {
             setSaveErrorState(true);
+            setSaveStatus("Save failed — check your connection", "error");
             showResultModal(false, "A network error occurred. Please check your connection and try again.");
         } finally {
             setSubmitting(false);
@@ -361,12 +405,13 @@
         initCharCounters();
 
         form.addEventListener("submit", submitForm);
-        form.addEventListener("input", updateAnsweredAccordionFromEvent);
-        form.addEventListener("change", updateAnsweredAccordionFromEvent);
+        form.addEventListener("input", handleFormEdit);
+        form.addEventListener("change", handleFormEdit);
     });
 
-    function updateAnsweredAccordionFromEvent(event) {
+    function handleFormEdit(event) {
         const item = event.target.closest("#sectionAccordion .accordion-item");
         if (item) updateAccordionAnswerState(item);
+        setSaveStatus("Unsaved changes", "pending");
     }
 })();

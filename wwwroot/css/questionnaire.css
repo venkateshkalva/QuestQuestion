@@ -3,6 +3,166 @@
     color: #0d3b8c;
 }
 
+.questionnaire-summary-header {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #d9e1ea;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 0.25rem 0.875rem rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+.summary-plaintiff {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    padding: 1.25rem;
+}
+
+.summary-plaintiff-icon {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 2.75rem;
+    place-items: center;
+    border-radius: 50%;
+    color: #1d4ed8;
+    background: #eaf2ff;
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.summary-kicker {
+    display: block;
+    margin-bottom: 0.1rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.summary-plaintiff h2 {
+    margin: 0 0 0.55rem;
+    color: #1e293b;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.summary-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+}
+
+.summary-details div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+
+.summary-details dt,
+.summary-details dd {
+    margin: 0;
+    font-size: 0.8125rem;
+}
+
+.summary-details dt {
+    color: #64748b;
+}
+
+.summary-details dd {
+    color: #334155;
+    font-weight: 600;
+}
+
+.summary-progress {
+    width: min(22rem, 38%);
+    min-width: 17rem;
+    padding: 1.25rem;
+    border-left: 1px solid #d9e1ea;
+    background: #f8fafc;
+}
+
+.summary-progress-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.summary-progress-heading strong {
+    color: #334155;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.summary-progress-track {
+    height: 0.45rem;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+
+.summary-progress-track .progress-bar {
+    border-radius: inherit;
+    background: linear-gradient(90deg, #2563eb, #38bdf8);
+    transition: width 0.2s ease;
+}
+
+.summary-save-status {
+    margin-top: 0.55rem;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.summary-save-status[data-state="pending"] {
+    color: #b45309;
+}
+
+.summary-save-status[data-state="saving"] {
+    color: #1d4ed8;
+}
+
+.summary-save-status[data-state="saved"] {
+    color: #15803d;
+}
+
+.summary-save-status[data-state="error"] {
+    color: #b91c1c;
+}
+
+@media (max-width: 991.98px) {
+    .questionnaire-summary-header {
+        display: block;
+    }
+
+    .summary-progress {
+        width: auto;
+        min-width: 0;
+        border-top: 1px solid #d9e1ea;
+        border-left: 0;
+    }
+
+}
+
+@media (max-width: 575.98px) {
+    .summary-plaintiff,
+    .summary-progress {
+        padding: 1rem;
+    }
+
+    .summary-progress-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+}
+
 #questionnaire-app fieldset {
     border: none;
     padding: 0;

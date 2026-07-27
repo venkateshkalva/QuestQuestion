@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuestDetails.Models;
 using QuestDetails.Services;
+using System.Reflection;
 
 namespace QuestDetails.Pages
 {
@@ -29,6 +30,8 @@ namespace QuestDetails.Pages
         [BindProperty]
         public FireQuestionnaireModel Form { get; set; } = new();
 
+        public PlaintiffSummary Plaintiff { get; } = new();
+
         /// <summary>
         /// GET: restore any in-progress draft from session so the user
         /// never loses answers to a refresh or timeout.
@@ -52,6 +55,7 @@ namespace QuestDetails.Pages
         /// </summary>
         public async Task<IActionResult> OnPostSubmitAsync(
             [FromBody] FireQuestionnaireModel submittedForm,
+            [FromQuery] bool validateForNext,
             CancellationToken cancellationToken)
         {
             if (submittedForm is null)
@@ -71,22 +75,35 @@ namespace QuestDetails.Pages
                 ? existingLqId
                 : -1;
 
-            var validation = await _validator.ValidateAsync(submittedForm, cancellationToken);
-            if (!validation.IsValid)
+            if (!validateForNext && !HasAtLeastOneAnswer(submittedForm))
             {
-                var errors = validation.Errors
-                    .GroupBy(error => $"Form.{error.PropertyName}")
-                    .ToDictionary(
-                        group => group.Key,
-                        group => group.Select(error => error.ErrorMessage).ToArray());
-
                 return new JsonResult(new SubmitResult
                 {
                     Success = false,
-                    Message = "Please correct the highlighted fields and try again.",
-                    Errors = errors
+                    Message = "Please answer at least one question before saving."
                 })
                 { StatusCode = StatusCodes.Status400BadRequest };
+            }
+
+            if (validateForNext)
+            {
+                var validation = await _validator.ValidateAsync(submittedForm, cancellationToken);
+                if (!validation.IsValid)
+                {
+                    var errors = validation.Errors
+                        .GroupBy(error => $"Form.{error.PropertyName}")
+                        .ToDictionary(
+                            group => group.Key,
+                            group => group.Select(error => error.ErrorMessage).ToArray());
+
+                    return new JsonResult(new SubmitResult
+                    {
+                        Success = false,
+                        Message = "Please correct the highlighted fields and try again.",
+                        Errors = errors
+                    })
+                    { StatusCode = StatusCodes.Status400BadRequest };
+                }
             }
 
             var request = new QuestionnaireSubmissionRequest
@@ -114,6 +131,41 @@ namespace QuestDetails.Pages
             {
                 StatusCode = result.Success ? StatusCodes.Status200OK : StatusCodes.Status502BadGateway
             };
+        }
+
+        private static bool HasAtLeastOneAnswer(object model)
+        {
+            foreach (var property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (!property.CanRead || property.Name is nameof(FireQuestionnaireModel.SessionId) or nameof(FireQuestionnaireModel.LqId))
+                {
+                    continue;
+                }
+
+                var value = property.GetValue(model);
+                if (value is null)
+                {
+                    continue;
+                }
+
+                if (value is string text && !string.IsNullOrWhiteSpace(text))
+                {
+                    return true;
+                }
+
+                var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                if (type.IsEnum)
+                {
+                    return true;
+                }
+
+                if (type.IsClass && HasAtLeastOneAnswer(value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
