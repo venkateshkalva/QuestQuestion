@@ -1,4 +1,6 @@
+using FluentValidation;
 using QuestDetails.Services;
+using QuestDetails.Validators;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -20,6 +22,10 @@ builder.Services.AddRazorPages(options =>
     options.JsonSerializerOptions.Converters.Add(
         new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
+
+// FluentValidation is invoked manually in the submit handler. This keeps
+// validation asynchronous-friendly and avoids MVC's legacy auto-validation.
+builder.Services.AddValidatorsFromAssemblyContaining<FireQuestionnaireValidator>();
 
 // ---------------------------------------------------------------
 // Session: server-side state, HttpOnly + Secure signed cookie holds

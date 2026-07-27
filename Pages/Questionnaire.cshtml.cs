@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuestDetails.Models;
@@ -9,15 +10,18 @@ namespace QuestDetails.Pages
     {
         private const string LqIdSessionKey = "Questionnaire.LqId";
         private readonly IQuestionnaireApiService _apiService;
+        private readonly IValidator<FireQuestionnaireModel> _validator;
         private readonly IQuestionnaireDraftStore _draftStore;
         private readonly ILogger<QuestionnaireModel> _logger;
 
         public QuestionnaireModel(
             IQuestionnaireApiService apiService,
+            IValidator<FireQuestionnaireModel> validator,
             IQuestionnaireDraftStore draftStore,
             ILogger<QuestionnaireModel> logger)
         {
             _apiService = apiService;
+            _validator = validator;
             _draftStore = draftStore;
             _logger = logger;
         }
@@ -67,18 +71,14 @@ namespace QuestDetails.Pages
                 ? existingLqId
                 : -1;
 
-            // Explicitly (re)validate the posted payload against the model's
-            // data annotations -- required because [FromBody] binding does
-            // not automatically populate ModelState the way property
-            // binding on a traditional form post does.
-            ModelState.Clear();
-            if (!TryValidateModel(submittedForm, nameof(submittedForm)))
+            var validation = await _validator.ValidateAsync(submittedForm, cancellationToken);
+            if (!validation.IsValid)
             {
-                var errors = ModelState
-                    .Where(kvp => kvp.Value?.Errors.Count > 0)
+                var errors = validation.Errors
+                    .GroupBy(error => $"Form.{error.PropertyName}")
                     .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
+                        group => group.Key,
+                        group => group.Select(error => error.ErrorMessage).ToArray());
 
                 return new JsonResult(new SubmitResult
                 {
